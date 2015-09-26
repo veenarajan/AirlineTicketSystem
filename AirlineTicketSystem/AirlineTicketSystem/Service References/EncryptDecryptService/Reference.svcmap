@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="6d1e5dc6-2c0b-4bc7-b44a-3de4759d81a3" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="157281e7-604f-40df-a2cb-8164dd6d07e8" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
   <ClientOptions>
     <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
     <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
@@ -22,10 +22,10 @@
     <MetadataSource Address="http://venus.eas.asu.edu/WSRepository/Services/EncryptionWcf/Service.svc" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="Service.xsd" MetadataType="Schema" ID="493506c1-e97d-47d8-939d-3b0ab09deda1" SourceId="1" SourceUrl="http://venus.eas.asu.edu/WSRepository/Services/EncryptionWcf/Service.svc?xsd=xsd0" />
-    <MetadataFile FileName="Service.wsdl" MetadataType="Wsdl" ID="aaf7ff00-0182-4084-98d9-7c0f4d48db5f" SourceId="1" SourceUrl="http://venus.eas.asu.edu/WSRepository/Services/EncryptionWcf/Service.svc?wsdl" />
-    <MetadataFile FileName="Service.disco" MetadataType="Disco" ID="89a0c787-60ab-44dc-9630-76d1cef2bf4b" SourceId="1" SourceUrl="http://venus.eas.asu.edu/WSRepository/Services/EncryptionWcf/Service.svc?disco" />
-    <MetadataFile FileName="Service1.xsd" MetadataType="Schema" ID="8eba3a40-d328-4834-adc7-ffb42480b0de" SourceId="1" SourceUrl="http://venus.eas.asu.edu/WSRepository/Services/EncryptionWcf/Service.svc?xsd=xsd1" />
+    <MetadataFile FileName="Service.xsd" MetadataType="Schema" ID="6db2f57b-e5da-4acd-bacf-ad6e72849658" SourceId="1" SourceUrl="http://venus.eas.asu.edu/WSRepository/Services/EncryptionWcf/Service.svc?xsd=xsd0" />
+    <MetadataFile FileName="Service.wsdl" MetadataType="Wsdl" ID="3c6585fc-676f-47ba-83cf-7838da45266b" SourceId="1" SourceUrl="http://venus.eas.asu.edu/WSRepository/Services/EncryptionWcf/Service.svc?wsdl" />
+    <MetadataFile FileName="Service.disco" MetadataType="Disco" ID="9762c550-e42c-445f-a6b6-0cb648237948" SourceId="1" SourceUrl="http://venus.eas.asu.edu/WSRepository/Services/EncryptionWcf/Service.svc?disco" />
+    <MetadataFile FileName="Service1.xsd" MetadataType="Schema" ID="23c5e225-fbec-404a-9a53-d505c393cd3e" SourceId="1" SourceUrl="http://venus.eas.asu.edu/WSRepository/Services/EncryptionWcf/Service.svc?xsd=xsd1" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

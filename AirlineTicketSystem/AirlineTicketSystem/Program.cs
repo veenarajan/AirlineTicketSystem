@@ -9,6 +9,7 @@ namespace AirlineTicketSystem
 {
     class Program
     {
+        public static bool[] isAliveStatus = { true, true, true };
         static void Main(string[] args)
         {
             Airline Airline1 = new Airline("JetAirways", 1, 10);
@@ -23,7 +24,7 @@ namespace AirlineTicketSystem
             TravelAgency Agency2 = new TravelAgency("Agency2", 2);
             TravelAgency Agency3 = new TravelAgency("Agency3", 3);
             TravelAgency Agency4 = new TravelAgency("Agency4", 4);
-            TravelAgency Agency5 = new TravelAgency("Agency5", 5); 
+            TravelAgency Agency5 = new TravelAgency("Agency5", 5);
             TravelAgency Agency6 = new TravelAgency("Agency6", 6);
 
             Thread AgencyThread1 = new Thread(new ThreadStart(Agency1.TravelAgencyFun));
@@ -32,7 +33,6 @@ namespace AirlineTicketSystem
             Thread AgencyThread4 = new Thread(new ThreadStart(Agency4.TravelAgencyFun));
             Thread AgencyThread5 = new Thread(new ThreadStart(Agency5.TravelAgencyFun));
             Thread AgencyThread6 = new Thread(new ThreadStart(Agency6.TravelAgencyFun));
-           
 
             Airline1.pricecut += new priceCutEvent(Agency1.EventHandler);
             Airline2.pricecut += new priceCutEvent(Agency2.EventHandler);
@@ -40,11 +40,6 @@ namespace AirlineTicketSystem
             Airline1.pricecut += new priceCutEvent(Agency4.EventHandler);
             Airline2.pricecut += new priceCutEvent(Agency5.EventHandler);
             Airline3.pricecut += new priceCutEvent(Agency6.EventHandler);
-            
-            
-            Airline1.pricecut += new priceCutEvent(Airline.AirlineFun);
-            Airline2.pricecut += new priceCutEvent(Airline.AirlineFun);
-            Airline3.pricecut += new priceCutEvent(Airline.AirlineFun);
 
 
             OrderProcessing.OrderConfirmation += new OrderConfirmationEvent(Agency1.EventHandler_ConfirmationStatus);
@@ -53,18 +48,6 @@ namespace AirlineTicketSystem
             OrderProcessing.OrderConfirmation += new OrderConfirmationEvent(Agency4.EventHandler_ConfirmationStatus);
             OrderProcessing.OrderConfirmation += new OrderConfirmationEvent(Agency5.EventHandler_ConfirmationStatus);
             OrderProcessing.OrderConfirmation += new OrderConfirmationEvent(Agency6.EventHandler_ConfirmationStatus);
-
- /*           Airline1.pricecut += new priceCutEvent(Agency2.EventHandler);
-            Airline1.pricecut += new priceCutEvent(Agency3.EventHandler);
-            Airline2.pricecut += new priceCutEvent(Agency1.EventHandler);
-            Airline2.pricecut += new priceCutEvent(Agency3.EventHandler);
-            Airline2.pricecut += new priceCutEvent(Agency4.EventHandler);
-            Airline3.pricecut += new priceCutEvent(Agency1.EventHandler);
-            Airline3.pricecut += new priceCutEvent(Agency2.EventHandler);
-            Airline3.pricecut += new priceCutEvent(Agency4.EventHandler);
-  */
-          
-
 
             AirlineThread1.Start();
             AirlineThread2.Start();

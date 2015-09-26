@@ -6,37 +6,25 @@ using System.Threading.Tasks;
 
 namespace AirlineTicketSystem
 {
-    /// <summary>
-    /// The Decoder class is implemented to convert the String back to the Order Class Object
-    /// </summary>
     class Decoder
     {
-        private string[] dString = new string[8];
-        private string decryptedString;
-        OrderClass order = new OrderClass();
         public OrderClass decryptString(string encryptedString)
         {
-            try
-            {
-                EncryptDecryptService.ServiceClient client = new EncryptDecryptService.ServiceClient();
-                decryptedString = client.Decrypt(encryptedString);
+            EncryptDecryptService.ServiceClient client = new EncryptDecryptService.ServiceClient();
+            OrderClass order = new OrderClass();
 
-                dString = decryptedString.Split(',');
+            string[] dString = new string[7];
+            string decryptedString = client.Decrypt(encryptedString);
 
-                order.set_senderId(dString[0]);
-                order.set_cardNo(Convert.ToInt32(dString[1]));
-                order.set_receiverId(dString[2]);
-                order.set_amount(Convert.ToInt32(dString[3]));
-                order.set_unitprice(Convert.ToInt32(dString[4]));
-                order.set_totalamount(Convert.ToInt32(dString[5]));
-                order.set_confirmationstatus(Convert.ToBoolean(dString[6]));
-                order.set_orderflag(Convert.ToBoolean(dString[7]));
+            dString = decryptedString.Split(',');
 
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Exception occured while decoding string" + e.Message.ToString());
-            }
+            order.set_senderId(dString[0]);
+            order.set_cardNo(Convert.ToInt32(dString[1]));
+            order.set_receiverId(dString[2]);
+            order.set_amount(Convert.ToInt32(dString[3]));
+            order.set_unitprice(Convert.ToInt32(dString[4]));
+            order.set_totalamount(Convert.ToInt32(dString[5]));
+            order.set_confirmationstatus(Convert.ToBoolean(dString[6]));
 
             return order;
         }

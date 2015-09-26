@@ -10,7 +10,7 @@ namespace AirlineTicketSystem
 {
     static class ConfirmationBuffer
     {
-                static BufferCell[] buffer = new BufferCell[]{
+        static BufferCell[] buffer = new BufferCell[]{
             new BufferCell(),
             new BufferCell(),
             new BufferCell()
@@ -24,50 +24,39 @@ namespace AirlineTicketSystem
         private static Semaphore sem_full = new Semaphore(3, 3);
         private static Semaphore sem_empty = new Semaphore(0, 3);
 
-        private static string ObjectString;
-
-        public static void setOneCell(string ObjectString_encoded)
+        public static void setOneCell(string ObjectString)
         {
 
-            try
-            {
-                sem_full.WaitOne();
-                mutex_lock.WaitOne();
+            // lock
+            // semaphore lock
+            sem_full.WaitOne();
+            // multi thread lock
+            mutex_lock.WaitOne();
+            // Console.WriteLine("write position is {0}\n", wposition);
+            buffer[wposition].set_string(ObjectString);
+            wposition = (wposition + 1) % 3;
 
-                //  Console.WriteLine("write position is {0}\n", wposition);
-                buffer[wposition].set_string(ObjectString_encoded);
-                wposition = (wposition + 1) % 3;
-
-                mutex_lock.ReleaseMutex();
-                sem_empty.Release();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Exception occured while setting ConfirmationBuffer" + e.Message.ToString());
-            }
-            
+            // un lock
+            mutex_lock.ReleaseMutex();
+            sem_empty.Release();
         }
 
         public static string getOneCell()
         {
-            try
-            {
-                sem_empty.WaitOne();
-                mutex_lock.WaitOne();
+            // lock
+            // semaphore lock
 
-                //Console.WriteLine("Readposition is {0}\n", rposition);
+            // multi thread lock
+            sem_empty.WaitOne();
+            mutex_lock.WaitOne();
+            //Console.WriteLine("Readposition is {0}\n", rposition);
+            string ObjectString = buffer[rposition].get_string();
+            rposition = (rposition + 1) % 3;
 
-                ObjectString = buffer[rposition].get_string();
-                rposition = (rposition + 1) % 3;
-
-                mutex_lock.ReleaseMutex();
-                sem_full.Release();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Exception occured while getting ConfirmationBuffer" + e.Message.ToString());
-            }
+            // unlock
+            mutex_lock.ReleaseMutex();
+            sem_full.Release();
             return ObjectString;
         }
-    }    
+    }
 }

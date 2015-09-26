@@ -23,50 +23,66 @@ namespace AirlineTicketSystem
         private static Semaphore sem_full = new Semaphore(3, 3);
         private static Semaphore sem_empty = new Semaphore(0, 3);
 
-        private static string ObjectString;
-
-        public static void setOneCell(string ObjectString_encoded)
+        public static void setOneCell(string ObjectString)
         {
-            try
-            {
-                sem_full.WaitOne();
-                mutex_lock.WaitOne();
 
-                //  Console.WriteLine("write position is {0}\n", wposition);
-                buffer[wposition].set_string(ObjectString_encoded);
-                wposition = (wposition + 1) % 3;
+            // lock
+            // semaphore lock
+            sem_full.WaitOne();
+            // multi thread lock
+            mutex_lock.WaitOne();
+            //Console.WriteLine("write position is {0}\n", wposition);
+            buffer[wposition].set_string(ObjectString);
 
-                mutex_lock.ReleaseMutex();
-                sem_empty.Release();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Exception occured while setting MultiBufferCell" + e.Message.ToString());
-            }
-            
+            wposition = (wposition + 1) % 3;
+
+            // un lock
+            mutex_lock.ReleaseMutex();
+            sem_empty.Release();
 
         }
 
-        public static string getOneCell()
+        public static string getOneCell(string AirlineName)
         {
-            try
+            // lock
+            // semaphore lock
+
+            // multi thread lock
+
+            for (int i = 0; i < 3; i++)
             {
-                sem_empty.WaitOne();
-                mutex_lock.WaitOne();
+                string ObjectString = buffer[rposition].get_string();
+                Decoder decode_test = new Decoder();
+                OrderClass obj = new OrderClass();
+                if (ObjectString != null)
+                {
+                    obj = decode_test.decryptString(ObjectString);
+                    //Console.WriteLine("string name passed is {0} actual name is {1}", AirlineName, obj.get_receiverId());
+                    if (obj.get_receiverId() == AirlineName)
+                    {
+                        sem_empty.WaitOne();
+                        //Console.WriteLine("Readposition is {0}\n", rposition);
+                        mutex_lock.WaitOne();
+                        rposition = (rposition + 1) % 3;
+                        mutex_lock.ReleaseMutex();
+                        sem_full.Release();
+                        return ObjectString;
+                    }
+                    else
+                    {
+                        mutex_lock.WaitOne();
+                        //Console.WriteLine("Readposition is {0}\n", rposition);
+                        rposition = (rposition + 1) % 3;
+                        mutex_lock.ReleaseMutex();
 
-                //Console.WriteLine("Readposition is {0}\n", rposition);
+                    }
+                }
 
-                ObjectString = buffer[rposition].get_string();
-                rposition = (rposition + 1) % 3;
-
-                mutex_lock.ReleaseMutex();
-                sem_full.Release();
             }
-            catch(Exception e)
-            {
-                Console.WriteLine("Exception occured while getting MultiBufferCell" + e.Message.ToString());
-            }
-            return ObjectString;
+            return null;
+            // unlock
+
         }
+
     }
 }

@@ -6,20 +6,15 @@ using System.Threading.Tasks;
 
 namespace AirlineTicketSystem
 {
-    /// <summary>
-    /// Provides the implementation of the Order Object
-    /// provides implementation to get and set the values of the object.
-    /// </summary>
     class OrderClass
     {
-        private string senderId;    // identity of sender either thread name or thread id
-        private int cardNo;         // Int representing credit card number
+        private string senderId; // identity of sender either thread name or thread id
+        private int cardNo; // Int representing credit card number
         private string receiverId;  //identity of the receiver either name/name for airline
-        private int amount;         //int representing number of tickets to order
-        private int unitprice;      // Price of ticket received from airline
+        private int amount; //int representing number of tickets to order
+        private int unitprice;  // Price of ticket received from airline
         private int TotalAmount;
         private bool ConfirmationStatus;
-        private bool orderflag;
 
         public void set_senderId(string sid)
         {
@@ -51,15 +46,10 @@ namespace AirlineTicketSystem
             TotalAmount = amt;
         }
 
-       public void set_confirmationstatus(bool ret)
+        public void set_confirmationstatus(bool ret)
         {
             ConfirmationStatus = ret;
         }
-
-        public void set_orderflag(bool value)
-       {
-           orderflag = value;
-       }
 
         public string get_senderId()
         {
@@ -92,11 +82,6 @@ namespace AirlineTicketSystem
         public bool get_confirmationstatus()
         {
             return ConfirmationStatus;
-        }
-
-        public bool get_orderflag()
-        {
-            return orderflag;
         }
 
     }

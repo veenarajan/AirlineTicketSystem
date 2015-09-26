@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace AirlineTicketSystem
 {
-    // conversion of object to string
+    /// <summary>
+    /// The Encoder class is implemnted to convert the Order Class Object to a String 
+    /// </summary>
     class Encoder
     {
         public string encryptString(OrderClass order)

@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace AirlineTicketSystem
 {
+    /// <summary>
+    /// The Decoder class is implemented to convert the String back to the Order Class Object
+    /// </summary>
     class Decoder
     {
         public OrderClass decryptString(string encryptedString)

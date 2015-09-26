@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace AirlineTicketSystem
 {
+    /// <summary>
+    /// This Class is the implememtation of each cell in the multibuffer cell.
+    /// provides 2 methods: one to set the value of the cell and the other to retrive it's value.
+    /// </summary>
     class BufferCell
     {
         private string data;

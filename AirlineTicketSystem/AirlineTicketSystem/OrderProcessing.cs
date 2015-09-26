@@ -31,8 +31,8 @@ namespace AirlineTicketSystem
 
         private void CalculatePrice()
         {
-            TotalAmount = unitprice * amount + Tax + LocationCharge; //amount is no of tickets
-            //Console.WriteLine("Total amount is {0}", TotalAmount);
+            TotalAmount = unitprice * amount + Tax + LocationCharge;
+            
         }
         public void OrderProcessingFun(OrderClass obj_1)
         {
@@ -44,23 +44,18 @@ namespace AirlineTicketSystem
             unitprice = obj_1.get_unitprice();
 
             string encodedString;
-            // if (receiverId == "JetAirways")
-           // Console.WriteLine("Order Processing Sender id {0} receiver id {1} Amount {2} Unitprice {3}", senderId, receiverId, amount, unitprice);
-
+          
             if (!IsValidCardNo(cardNo) || amount == 0)
             {
-                //Console.WriteLine("the order cannot be processed {0} {1}", senderId, receiverId);
                 obj_1.set_confirmationstatus(false);
                 obj_1.set_totalamount(0);
                 encodedString = encode.encryptString(obj_1);
                 ConfirmationBuffer.setOneCell(encodedString);
 
-
             }
             else
             {
                 CalculatePrice();
-                //Console.WriteLine("it's done :P");
                 obj_1.set_confirmationstatus(true);
                 obj_1.set_totalamount(TotalAmount);
 
@@ -68,7 +63,6 @@ namespace AirlineTicketSystem
                 ConfirmationBuffer.setOneCell(encodedString);
 
             }
-            //TravelAgency.EventHandler_ConfirmationStatus();
             OrderConfirmation();
         }
     }

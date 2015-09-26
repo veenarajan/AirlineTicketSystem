@@ -34,10 +34,8 @@ namespace AirlineTicketSystem
             OrderClass obj = new OrderClass();
             timeSpan = TimeSpan.Zero;
 
-            // string[] s = { "JetAirways", "BritishAir", "Luftansa" };
             obj.set_senderId(name);
             obj.set_cardNo(rnd.Next(1000, 9000));
-            // obj.set_receiverId(s[(i++)%3]);
             obj.set_receiverId(AirlineName);
             obj.set_amount(rnd.Next(1, 5));
             obj.set_unitprice(thread_price);
@@ -60,12 +58,9 @@ namespace AirlineTicketSystem
                 {
                     OrderClass obj = new OrderClass();
                     obj = generate_obj();
-                    //Console.WriteLine("Travel Agency Sender id {0} card no{1} receiver id {2} Amount {3} Unitprice {4}", obj.get_senderId(), obj.get_cardNo(), obj.get_receiverId(), obj.get_amount(), obj.get_unitprice());
-                    // Console.WriteLine("Travel Agency Sender id {0} receiver id {1} Amount {2} Unitprice {3}", obj.get_senderId(), obj.get_receiverId(), obj.get_amount(), obj.get_unitprice());
-
+           
                     Encoder encode_test = new Encoder();
                     encodedOrderString = encode_test.encryptString(obj);
-                    // Console.WriteLine("Encoded string is {0}\n", encodedOrderString);
                     stopWatch.Start();
 
                     MultiCellBuffer.setOneCell(encodedOrderString);
@@ -78,10 +73,9 @@ namespace AirlineTicketSystem
 
         }
 
-        public void EventHandler(int p, string n) //Event handler call back function
+        public void EventHandler(int p, string n) 
         {
 
-            //Console.WriteLine("Inside event handler {0} {1}", n, p);
             thread_price = p;
             AirlineName = n;
             flag = true;

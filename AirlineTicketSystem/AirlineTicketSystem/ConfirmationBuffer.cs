@@ -8,6 +8,9 @@ using System.Threading;
 
 namespace AirlineTicketSystem
 {
+    /// <summary>
+    /// Class provides methods to set and retrive the values for the confirmation buffer
+    /// </summary>
     static class ConfirmationBuffer
     {
         static BufferCell[] buffer = new BufferCell[]{
@@ -27,33 +30,28 @@ namespace AirlineTicketSystem
         public static void setOneCell(string ObjectString)
         {
 
-            // lock
-            // semaphore lock
             sem_full.WaitOne();
-            // multi thread lock
+         
             mutex_lock.WaitOne();
-            // Console.WriteLine("write position is {0}\n", wposition);
+          
             buffer[wposition].set_string(ObjectString);
             wposition = (wposition + 1) % 3;
 
-            // un lock
+           
             mutex_lock.ReleaseMutex();
             sem_empty.Release();
         }
 
         public static string getOneCell()
         {
-            // lock
-            // semaphore lock
-
-            // multi thread lock
+           
             sem_empty.WaitOne();
             mutex_lock.WaitOne();
-            //Console.WriteLine("Readposition is {0}\n", rposition);
+           
             string ObjectString = buffer[rposition].get_string();
             rposition = (rposition + 1) % 3;
 
-            // unlock
+        
             mutex_lock.ReleaseMutex();
             sem_full.Release();
             return ObjectString;

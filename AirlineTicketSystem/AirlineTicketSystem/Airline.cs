@@ -31,10 +31,6 @@ namespace AirlineTicketSystem
             this.current_ticketprice = 900;
             this.remaining_tickets = number;
             Termination = 0;
-            //remaining_tickets = new int[3];
-            //remaining_tickets[0] = number; //jetairways
-            //remaining_tickets[1] = number;  //britishairways
-            //remaining_tickets[2] = number;  //luftansa
         }
 
         public void AirlineFun()
@@ -89,25 +85,20 @@ namespace AirlineTicketSystem
                     OrderClass obj = new OrderClass();
 
                     obj = decode_test.decryptString(multiCell);
-                    //Console.WriteLine("Airline Function Sender id {0} receiver id {1} Amount {2} Unitprice {3}",
-                      //              obj.get_senderId(), obj.get_receiverId(), obj.get_amount(), obj.get_unitprice());
-                    // Console.WriteLine("Airline name is {0} sender id {1} receiver id {2}", name, obj.get_senderId(), obj.get_receiverId());
-
+                   
                     this.remaining_tickets = this.remaining_tickets - obj.get_amount();
-                   // Console.WriteLine("Remaining tic {0} {1}", this.remaining_tickets, obj.get_receiverId());
+                   
 
                     if (this.remaining_tickets < 0)
                     {
-                        //Console.WriteLine("Amount not processed is {0} {1}", obj.get_amount(), obj.get_receiverId());
+                       
                         obj.set_amount(0);
                     }
 
                     OrderProcessing order = new OrderProcessing();
                     Thread OrderProcessingThread = new Thread(() => order.OrderProcessingFun(obj));
                     OrderProcessingThread.Start();
-                    //Console.WriteLine("{0} Thread created", obj.get_receiverId());
-
-
+                  
                 }
             }
         }

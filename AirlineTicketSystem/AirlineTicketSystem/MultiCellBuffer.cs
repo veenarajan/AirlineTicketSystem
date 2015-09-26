@@ -7,6 +7,9 @@ using System.Threading;
 
 namespace AirlineTicketSystem
 {
+    /// <summary>
+    /// Class provides methos to get and set values in the Multi cell buffer 
+    /// </summary>
     static class MultiCellBuffer
     {
         static BufferCell[] buffer = new BufferCell[]{
@@ -25,18 +28,12 @@ namespace AirlineTicketSystem
 
         public static void setOneCell(string ObjectString)
         {
-
-            // lock
-            // semaphore lock
             sem_full.WaitOne();
-            // multi thread lock
             mutex_lock.WaitOne();
-            //Console.WriteLine("write position is {0}\n", wposition);
             buffer[wposition].set_string(ObjectString);
 
             wposition = (wposition + 1) % 3;
 
-            // un lock
             mutex_lock.ReleaseMutex();
             sem_empty.Release();
 
@@ -44,11 +41,6 @@ namespace AirlineTicketSystem
 
         public static string getOneCell(string AirlineName)
         {
-            // lock
-            // semaphore lock
-
-            // multi thread lock
-
             for (int i = 0; i < 3; i++)
             {
                 string ObjectString = buffer[rposition].get_string();
@@ -57,11 +49,9 @@ namespace AirlineTicketSystem
                 if (ObjectString != null)
                 {
                     obj = decode_test.decryptString(ObjectString);
-                    //Console.WriteLine("string name passed is {0} actual name is {1}", AirlineName, obj.get_receiverId());
                     if (obj.get_receiverId() == AirlineName)
                     {
                         sem_empty.WaitOne();
-                        //Console.WriteLine("Readposition is {0}\n", rposition);
                         mutex_lock.WaitOne();
                         rposition = (rposition + 1) % 3;
                         mutex_lock.ReleaseMutex();
@@ -71,17 +61,14 @@ namespace AirlineTicketSystem
                     else
                     {
                         mutex_lock.WaitOne();
-                        //Console.WriteLine("Readposition is {0}\n", rposition);
                         rposition = (rposition + 1) % 3;
                         mutex_lock.ReleaseMutex();
-
                     }
                 }
 
             }
             return null;
-            // unlock
-
+            
         }
 
     }

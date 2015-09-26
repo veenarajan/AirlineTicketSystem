@@ -24,8 +24,8 @@ namespace AirlineTicketSystem
 
         public TravelAgency(string n, int my_id)
         {
-            this.name = n;
-            this.id = my_id;
+            name = n;
+            id = my_id;
             flag = false;
         }
 

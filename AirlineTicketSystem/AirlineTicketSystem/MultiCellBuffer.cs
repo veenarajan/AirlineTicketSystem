@@ -49,10 +49,15 @@ namespace AirlineTicketSystem
                 if (ObjectString != null)
                 {
                     obj = decode_test.decryptString(ObjectString);
+                    //Console.WriteLine("string name passed is {0} actual name is {1}", AirlineName, obj.get_receiverId());
                     if (obj.get_receiverId() == AirlineName)
                     {
                         sem_empty.WaitOne();
+                        Console.WriteLine("Readposition is {0}\n", rposition);
                         mutex_lock.WaitOne();
+                        //buffer[rposition].set_string(String.Empty);
+                        buffer[rposition].set_string(null);
+                        //buffer[rposition] = "\0";
                         rposition = (rposition + 1) % 3;
                         mutex_lock.ReleaseMutex();
                         sem_full.Release();
@@ -61,8 +66,10 @@ namespace AirlineTicketSystem
                     else
                     {
                         mutex_lock.WaitOne();
+                        //Console.WriteLine("Readposition is {0}\n", rposition);
                         rposition = (rposition + 1) % 3;
                         mutex_lock.ReleaseMutex();
+
                     }
                 }
 

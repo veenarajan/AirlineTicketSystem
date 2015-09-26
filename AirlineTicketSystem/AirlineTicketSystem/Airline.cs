@@ -25,31 +25,46 @@ namespace AirlineTicketSystem
 
         public Airline(string n, int my_id, int number)
         {
-            this.id = my_id;
-            this.name = n;
-            this.PriceCutCounter = 0;
-            this.current_ticketprice = 900;
-            this.remaining_tickets = number;
+            id = my_id;
+            name = n;
+            PriceCutCounter = 0;
+            current_ticketprice = 900;
+            remaining_tickets = number;
             Termination = 0;
         }
 
         public void AirlineFun()
         {
-           
             while (true)
             {
-               
-                string multiCell = MultiCellBuffer.getOneCell(name);
-        
+                string multiCell = MultiCellBuffer.getOneCell(this.name);
                 if (multiCell != null)
                 {
                     Decoder decode_test = new Decoder();
                     OrderClass obj = new OrderClass();
 
                     obj = decode_test.decryptString(multiCell);
-                   
+                    Console.WriteLine("Airline Function Sender id {0} receiver id {1} Amount {2} Unitprice {3}",
+                                    obj.get_senderId(), obj.get_receiverId(), obj.get_amount(), obj.get_unitprice());
+
+                    this.remaining_tickets = this.remaining_tickets - obj.get_amount();
+                    Console.WriteLine("Remaining tic {0} {1}", this.remaining_tickets, obj.get_receiverId());
+
+                    if (this.remaining_tickets < 0)
+                    {
+                        Console.WriteLine("Amount not processed is {0} {1}", obj.get_amount(), obj.get_receiverId());
+                        obj.set_amount(0);
+                    }
+
+                    OrderProcessing order = new OrderProcessing();
+                    Thread OrderProcessingThread = new Thread(() => order.OrderProcessingFun(obj));
+                    OrderProcessingThread.Start();
+                    //OrderProcessingThread.Join();
+                    Console.WriteLine("{0} Thread created", obj.get_receiverId());
                 }
+                Thread.Sleep(1000);
             }
+            //while (Termination != 1);
         }
 
         public void PricingModel()
@@ -64,43 +79,17 @@ namespace AirlineTicketSystem
                     {
                         if (pricecut != null)
                         {
+                            Console.WriteLine("PRICE CUT !!!!!");
                             pricecut(price, this.name);
                         }
                         current_ticketprice = price;
                         PriceCutCounter++;
-                        Console.WriteLine("Counter is {0} {1} {2}\n", PriceCutCounter, name, price);
-
-                        if (current_ticketprice == 100)
-                        {
-                            current_ticketprice = 900;
-                        }
                     }
                     else
                         Termination = 1;
                 }
-                string multiCell = MultiCellBuffer.getOneCell(this.name);
-                if (multiCell != null)
-                {
-                    Decoder decode_test = new Decoder();
-                    OrderClass obj = new OrderClass();
-
-                    obj = decode_test.decryptString(multiCell);
-                   
-                    this.remaining_tickets = this.remaining_tickets - obj.get_amount();
-                   
-
-                    if (this.remaining_tickets < 0)
-                    {
-                       
-                        obj.set_amount(0);
-                    }
-
-                    OrderProcessing order = new OrderProcessing();
-                    Thread OrderProcessingThread = new Thread(() => order.OrderProcessingFun(obj));
-                    OrderProcessingThread.Start();
-                  
-                }
             }
+            //while (Termination != 1);
         }
     }
 }

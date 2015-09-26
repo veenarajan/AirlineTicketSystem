@@ -11,23 +11,32 @@ namespace AirlineTicketSystem
     /// </summary>
     class Decoder
     {
+        EncryptDecryptService.ServiceClient client = new EncryptDecryptService.ServiceClient();
+        OrderClass order = new OrderClass();
+
+        string[] dString = new string[7];
+        string decryptedString;    
         public OrderClass decryptString(string encryptedString)
         {
-            EncryptDecryptService.ServiceClient client = new EncryptDecryptService.ServiceClient();
-            OrderClass order = new OrderClass();
+                
+            try
+            {
+                decryptedString = client.Decrypt(encryptedString);
 
-            string[] dString = new string[7];
-            string decryptedString = client.Decrypt(encryptedString);
+                dString = decryptedString.Split(',');
 
-            dString = decryptedString.Split(',');
-
-            order.set_senderId(dString[0]);
-            order.set_cardNo(Convert.ToInt32(dString[1]));
-            order.set_receiverId(dString[2]);
-            order.set_amount(Convert.ToInt32(dString[3]));
-            order.set_unitprice(Convert.ToInt32(dString[4]));
-            order.set_totalamount(Convert.ToInt32(dString[5]));
-            order.set_confirmationstatus(Convert.ToBoolean(dString[6]));
+                order.set_senderId(dString[0]);
+                order.set_cardNo(Convert.ToInt32(dString[1]));
+                order.set_receiverId(dString[2]);
+                order.set_amount(Convert.ToInt32(dString[3]));
+                order.set_unitprice(Convert.ToInt32(dString[4]));
+                order.set_totalamount(Convert.ToInt32(dString[5]));
+                order.set_confirmationstatus(Convert.ToBoolean(dString[6]));
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine("Exception occured while Decoding" + e.Message.ToString());
+            }
 
             return order;
         }

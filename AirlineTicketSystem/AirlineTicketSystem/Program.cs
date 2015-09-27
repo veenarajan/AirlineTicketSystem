@@ -1,4 +1,10 @@
-﻿using System;
+﻿/*
+ * Team void main - Uma and Veena
+ * No of Airline threads - 3
+ * No of Agency threads - 6
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,18 +13,32 @@ using System.Threading;
 
 namespace AirlineTicketSystem
 {
+    /// <summary>
+    /// Main class creating Airline and agency threads, starts threads and instantiate objects.
+    /// </summary>
     class Program
     {
+        public static Thread AirlineThread1, AirlineThread2, AirlineThread3;
         public static bool[] isAliveStatus = { true, true, true };
         static void Main(string[] args)
         {
-            Airline Airline1 = new Airline("JetAirways", 1, 10);
-            Airline Airline2 = new Airline("BritishAir", 2, 10);
-            Airline Airline3 = new Airline("Luftansa", 3, 10);
+            Console.WriteLine("Airline Ticketing System ");
+            Console.WriteLine("Press Enter to begin and Exit......\n\n");
+            Console.ReadLine();
 
-            Thread AirlineThread1 = new Thread(new ThreadStart(Airline1.PricingModel));
-            Thread AirlineThread2 = new Thread(new ThreadStart(Airline2.PricingModel));
-            Thread AirlineThread3 = new Thread(new ThreadStart(Airline3.PricingModel));
+            // Register Airline
+            Airline Airline1 = new Airline("JetAirways", 1, 50);
+            Airline Airline2 = new Airline("BritishAir", 2, 50);
+            Airline Airline3 = new Airline("Luftansa", 3, 50);
+
+            AirlineThread1 = new Thread(new ThreadStart(Airline1.PricingModel));
+            AirlineThread2 = new Thread(new ThreadStart(Airline2.PricingModel));
+            AirlineThread3 = new Thread(new ThreadStart(Airline3.PricingModel));
+
+            Thread A1 = new Thread(new ThreadStart(Airline1.AirlineFun));
+            Thread A2 = new Thread(new ThreadStart(Airline2.AirlineFun));
+            Thread A3 = new Thread(new ThreadStart(Airline3.AirlineFun));
+
 
             TravelAgency Agency1 = new TravelAgency("Agency1", 1);
             TravelAgency Agency2 = new TravelAgency("Agency2", 2);
@@ -49,9 +69,21 @@ namespace AirlineTicketSystem
             OrderProcessing.OrderConfirmation += new OrderConfirmationEvent(Agency5.EventHandler_ConfirmationStatus);
             OrderProcessing.OrderConfirmation += new OrderConfirmationEvent(Agency6.EventHandler_ConfirmationStatus);
 
+         
+            /*
+            Airline1.pricecut += new priceCutEvent(Airline1.AirlineFun);
+            Airline2.pricecut += new priceCutEvent(Airline2.AirlineFun);
+            Airline3.pricecut += new priceCutEvent(Airline3.AirlineFun);
+            */
+
             AirlineThread1.Start();
             AirlineThread2.Start();
             AirlineThread3.Start();
+
+            A1.Start();
+            A2.Start();
+            A3.Start();
+
 
             AgencyThread1.Start();
             AgencyThread2.Start();
@@ -60,14 +92,24 @@ namespace AirlineTicketSystem
             AgencyThread5.Start();
             AgencyThread6.Start();
 
+
             AirlineThread1.Join();
             AirlineThread2.Join();
             AirlineThread3.Join();
+
+            A1.Join();
+            A2.Join();
+            A3.Join();
+            
 
             AgencyThread1.Join();
             AgencyThread2.Join();
             AgencyThread3.Join();
             AgencyThread4.Join();
+            AgencyThread5.Join();
+            AgencyThread6.Join();
+
+            Console.WriteLine("Execution Successful. Press Enter to Exit !!");
 
             Console.ReadLine();
         }

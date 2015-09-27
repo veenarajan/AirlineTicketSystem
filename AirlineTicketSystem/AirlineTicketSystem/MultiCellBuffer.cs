@@ -8,19 +8,22 @@ using System.Threading;
 namespace AirlineTicketSystem
 {
     /// <summary>
-    /// Class provides methos to get and set values in the Multi cell buffer 
+    /// Class provides methods to get and set values in the Multi cell buffer 
     /// </summary>
     static class MultiCellBuffer
     {
-        static BufferCell[] buffer = new BufferCell[]{
-            new BufferCell(),
-            new BufferCell(),
-            new BufferCell()
-        };
-
-        private static int wposition = 0;
-        private static int rposition = 0;
-
+        public static string[] buffer = new string[3];
+        static bool[] IsEmpty = new bool[3];
+        
+        static MultiCellBuffer()
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                buffer[i] = null;
+                IsEmpty[i] = true;
+            }
+            
+        }
         private static Mutex mutex_lock = new Mutex();
 
         private static Semaphore sem_full = new Semaphore(3, 3);
@@ -28,55 +31,59 @@ namespace AirlineTicketSystem
 
         public static void setOneCell(string ObjectString)
         {
-            sem_full.WaitOne();
-            mutex_lock.WaitOne();
-            buffer[wposition].set_string(ObjectString);
-
-            wposition = (wposition + 1) % 3;
-
-            mutex_lock.ReleaseMutex();
-            sem_empty.Release();
-
+            if (sem_full.WaitOne(300))
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    mutex_lock.WaitOne();
+                    if (IsEmpty[i] == true)
+                    {
+                        buffer[i] = ObjectString;
+                        IsEmpty[i] = false;
+                        //Console.WriteLine("Wposition is {0}", i);
+                        mutex_lock.ReleaseMutex();
+                        sem_empty.Release();
+                        return;
+                    }
+                    mutex_lock.ReleaseMutex();
+                    
+                }
+            }
         }
 
         public static string getOneCell(string AirlineName)
         {
-            for (int i = 0; i < 3; i++)
+            if (sem_empty.WaitOne(300))
             {
-                string ObjectString = buffer[rposition].get_string();
-                Decoder decode_test = new Decoder();
-                OrderClass obj = new OrderClass();
-                if (ObjectString != null)
+                for (int i = 0; i < 3; i++)
                 {
-                    obj = decode_test.decryptString(ObjectString);
-                    //Console.WriteLine("string name passed is {0} actual name is {1}", AirlineName, obj.get_receiverId());
-                    if (obj.get_receiverId() == AirlineName)
+                    if (IsEmpty[i] == false)
                     {
-                        sem_empty.WaitOne();
-                        Console.WriteLine("Readposition is {0}\n", rposition);
-                        mutex_lock.WaitOne();
-                        //buffer[rposition].set_string(String.Empty);
-                        buffer[rposition].set_string(null);
-                        //buffer[rposition] = "\0";
-                        rposition = (rposition + 1) % 3;
-                        mutex_lock.ReleaseMutex();
-                        sem_full.Release();
-                        return ObjectString;
-                    }
-                    else
-                    {
-                        mutex_lock.WaitOne();
-                        //Console.WriteLine("Readposition is {0}\n", rposition);
-                        rposition = (rposition + 1) % 3;
-                        mutex_lock.ReleaseMutex();
+                        string ObjectString = buffer[i];
+                        Decoder decode_test = new Decoder();
+                        OrderClass obj = new OrderClass();
+                        if (ObjectString != null)
+                        {
+                            obj = decode_test.decryptString(ObjectString);
+                            //Console.WriteLine("string name passed is {0} actual name is {1}", AirlineName, obj.get_receiverId());
+                            if (obj.get_receiverId() == AirlineName)
+                            {
+                                //Console.WriteLine("Readposition is {0}\n", i);
+                                mutex_lock.WaitOne();
+                                buffer[i] = null;
+                                IsEmpty[i] = true;
+                                mutex_lock.ReleaseMutex();
+                                sem_full.Release();
+                                return ObjectString;
+                            }
+                        }
 
                     }
                 }
-
+                sem_empty.Release();
             }
             return null;
-            
-        }
 
+        }
     }
 }

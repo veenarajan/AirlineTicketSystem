@@ -8,6 +8,11 @@ using System.Threading;
 
 namespace AirlineTicketSystem
 {
+    /// <summary>
+    /// Class provides a pricing model to calculate the ticket price. 
+    /// It also receives the encoded string from the MultiCellBuffer and sends the decoded string to process order.
+    /// </summary>
+
     public delegate void priceCutEvent(int price, string name);
 
     class Airline
@@ -15,81 +20,119 @@ namespace AirlineTicketSystem
         private int id;
         private string name;
         private int remaining_tickets;
+        private int NullCount;
         static Random rng = new Random();
         private int PriceCutCounter;
         private int current_ticketprice;
         public event priceCutEvent pricecut;
-        private static int Termination;
+        
 
 
 
         public Airline(string n, int my_id, int number)
         {
-            id = my_id;
-            name = n;
-            PriceCutCounter = 0;
-            current_ticketprice = 900;
-            remaining_tickets = number;
-            Termination = 0;
+            this.id = my_id;
+            this.name = n;
+            this.PriceCutCounter = 0;
+            this.current_ticketprice = 900;
+            this.remaining_tickets = number;
+            this.NullCount = 0;
         }
 
         public void AirlineFun()
         {
-            while (true)
+            while (Program.AirlineThread1.IsAlive || Program.AirlineThread2.IsAlive || Program.AirlineThread3.IsAlive || NullCount < 6)
             {
                 string multiCell = MultiCellBuffer.getOneCell(this.name);
                 if (multiCell != null)
                 {
+                    NullCount = 0;
                     Decoder decode_test = new Decoder();
                     OrderClass obj = new OrderClass();
 
                     obj = decode_test.decryptString(multiCell);
-                    Console.WriteLine("Airline Function Sender id {0} receiver id {1} Amount {2} Unitprice {3}",
-                                    obj.get_senderId(), obj.get_receiverId(), obj.get_amount(), obj.get_unitprice());
 
+                    Console.WriteLine("\n\n------------ ORDER SENT --------------");
+                    Console.WriteLine("Travel {0} is placing an order for {1} tickets to {2}",obj.get_senderId(),obj.get_amount(),obj.get_receiverId());
+                    Console.WriteLine("The price for each ticket is : ${0}", obj.get_unitprice());
+                    Console.WriteLine("-------------------------------------------\n\n");
                     this.remaining_tickets = this.remaining_tickets - obj.get_amount();
-                    Console.WriteLine("Remaining tic {0} {1}", this.remaining_tickets, obj.get_receiverId());
+                    //Console.WriteLine("Remaining tic {0} {1}", this.remaining_tickets, obj.get_receiverId());
 
                     if (this.remaining_tickets < 0)
                     {
-                        Console.WriteLine("Amount not processed is {0} {1}", obj.get_amount(), obj.get_receiverId());
+                        //Console.WriteLine("Amount not processed is {0} {1}", obj.get_amount(), obj.get_receiverId());
                         obj.set_amount(0);
                     }
 
                     OrderProcessing order = new OrderProcessing();
                     Thread OrderProcessingThread = new Thread(() => order.OrderProcessingFun(obj));
                     OrderProcessingThread.Start();
-                    //OrderProcessingThread.Join();
-                    Console.WriteLine("{0} Thread created", obj.get_receiverId());
+                    OrderProcessingThread.Join();
+                    //Console.WriteLine("{0} Thread created", obj.get_receiverId());
+      
                 }
-                Thread.Sleep(1000);
-            }
-            //while (Termination != 1);
+                    else
+                {
+                    NullCount++;
+                }
+                //Thread.Sleep(1000);
+            } 
+    
         }
 
         public void PricingModel()
         {
-            while (true)
-            {
                 int NoOfTickets = this.remaining_tickets;
-                if (PriceCutCounter < 5)
+                while (this.PriceCutCounter < 10)
                 {
-                    int price = rng.Next(100, 900);
+
+                    if (NoOfTickets <= 0)
+                    {
+                        Console.WriteLine("We are sorry. No Tickets Availablle");
+                        //break;
+                    }
+                    
+                    //int price = rng.Next(100, 900);
+                    int price = 0;
+                    NoOfTickets = this.remaining_tickets;
+
+                    if (NoOfTickets > 40)
+                    {
+                        price = rng.Next(701, 900);
+                    }
+                    else if ((NoOfTickets > 25) && (NoOfTickets <= 40))
+                    {
+                        price = rng.Next(301, 700);
+                    }
+                    else if ((NoOfTickets > 15) && (NoOfTickets <= 25))
+                    {
+                        price = rng.Next(100, 300);
+                    }
+                    else if (NoOfTickets <= 15)
+                    {
+                        price = rng.Next(100, 300);
+                    }
+                            
+                    // Console.WriteLine("New price generated by pricingmodel is {0} {1}\n", price, name);
                     if (price < current_ticketprice)
                     {
+                            
                         if (pricecut != null)
                         {
-                            Console.WriteLine("PRICE CUT !!!!!");
+                            Console.WriteLine("PRICE CUT for Airline {0}!!!!!", this.name);
                             pricecut(price, this.name);
                         }
                         current_ticketprice = price;
-                        PriceCutCounter++;
+                        this.PriceCutCounter++;
+                        if (current_ticketprice == 100 && this.PriceCutCounter < 10)
+                        {
+                            current_ticketprice = 400;
+                        }
                     }
-                    else
-                        Termination = 1;
-                }
-            }
-            //while (Termination != 1);
+                    Thread.Sleep(200);                    
+                 }
+                Console.WriteLine("10 Price cuts! Airline {0} Thread exiting", this.name);
         }
     }
 }

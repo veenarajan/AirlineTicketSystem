@@ -19,8 +19,7 @@ namespace AirlineTicketSystem
         private int unitprice;      // Price of ticket received from airline
         private int TotalAmount;    // Total amount of ticket
         private bool ConfirmationStatus; // verify if the order has been processed
-        private bool orderflag; // check if the tickets are avaliable or not
-
+        
         public void set_senderId(string sid)
         {
             senderId = sid;

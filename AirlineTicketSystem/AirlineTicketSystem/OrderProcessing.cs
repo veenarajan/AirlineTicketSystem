@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 
 namespace AirlineTicketSystem
 {
-    public delegate void OrderConfirmationEvent();
+
+    /// <summary>
+    /// Provides implemetation of Order Processing
+    /// provides checks for validation of credit card number and calculates total ticket amount.
+    /// </summary>
+    public delegate void OrderConfirmationEvent(string encodedString);
     class OrderProcessing
     {
         private string senderId;
@@ -50,7 +55,7 @@ namespace AirlineTicketSystem
                 obj_1.set_confirmationstatus(false);
                 obj_1.set_totalamount(0);
                 encodedString = encode.encryptString(obj_1);
-                ConfirmationBuffer.setOneCell(encodedString);
+              //  ConfirmationBuffer.setOneCell(encodedString);
 
             }
             else
@@ -60,10 +65,14 @@ namespace AirlineTicketSystem
                 obj_1.set_totalamount(TotalAmount);
 
                 encodedString = encode.encryptString(obj_1);
-                ConfirmationBuffer.setOneCell(encodedString);
+            //    ConfirmationBuffer.setOneCell(encodedString);
 
             }
-            OrderConfirmation();
+            if (encodedString != null)
+            {
+                OrderConfirmation(encodedString);
+            }
+            
         }
     }
 }
